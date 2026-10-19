@@ -7,7 +7,8 @@
 <meta name="description" content="Pendaftaran Event Menzil Bersama – Latber dan Edukasi Menzil, D'raas Menzil Indonesia.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Inter:wght@300;400;500;600&family=Playfair+Display:ital@1&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Inter:wght@400;500;600&family=Playfair+Display:ital@1&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Inter:wght@400;500;600&family=Playfair+Display:ital@1&display=swap" rel="stylesheet"></noscript>
 <style>
 :root{
   --bg:#150205; --bg2:#2a050b; --card:#1d0409e6;
@@ -49,7 +50,7 @@ h1{font-family:'Cinzel',serif;font-weight:900;font-size:clamp(38px,9vw,72px);lin
 .info em{display:block;font-style:normal;font-size:12px;color:var(--muted);margin-top:2px}
 
 /* Form card */
-.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:clamp(22px,5vw,40px);box-shadow:0 30px 80px -30px #000, inset 0 0 0 1px rgba(255,255,255,.02);backdrop-filter:blur(6px)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:clamp(22px,5vw,40px);box-shadow:0 30px 80px -30px #000, inset 0 0 0 1px rgba(255,255,255,.02)}
 .sec{display:flex;align-items:center;gap:12px;margin:34px 0 18px;font-family:'Cinzel',serif;font-size:14px;letter-spacing:.2em;text-transform:uppercase}
 .sec:first-child{margin-top:0}
 .sec b{width:28px;height:28px;border-radius:50%;border:1px solid var(--gold);display:grid;place-items:center;font-size:12px;color:var(--gold2)}
@@ -261,10 +262,10 @@ button.submit{min-height:54px}
           <label>Bukti Transfer <i>*</i></label>
           <label class="file" for="bukti">
             <input id="bukti" type="file" accept="image/*">
-            <span id="fileLabel">Ketuk untuk <b>unggah foto bukti transfer</b> (JPG/PNG, maks. 2 MB)</span>
+            <span id="fileLabel">Ketuk untuk <b>unggah foto bukti transfer</b> (otomatis dikompres jadi ±100 KB)</span>
             <img id="preview" alt="Pratinjau bukti transfer">
           </label>
-          <div class="err" id="fileErr">Unggah bukti transfer (gambar, maks. 2 MB).</div>
+          <div class="err" id="fileErr">Unggah bukti transfer (file gambar).</div>
         </div>
 
         <input class="hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
@@ -299,12 +300,13 @@ button.submit{min-height:54px}
 <script>
 /* ============ KONFIGURASI — EDIT BAGIAN INI ============ */
 const CONFIG = {
-  SCRIPT_URL: "https://script.google.com/macros/s/AKfycbyASAqGHXkZh3rfHBDq2Ybfrfp5dOZYCSjdCOdz2vfKvbstbH5b5xXyQy3gMhDc-eR1/exec",   // dari Deploy > Web app
+  SCRIPT_URL: "https://script.google.com/macros/s/AKfycbxaD9K3BCgwfsc26V_ZPblxgPjlkHlhacT1E_ugkv1SUv_cCN-7YALmubDgvRaTNi-Q/exec",   // dari Deploy > Web app
   ADMIN_WA:   "+6281224456950",                            // nomor panitia, format 62…
   FEE_LABEL:  "Rp 150.000",
   BANK:       "BCA · 1481901931",
   BANK_NAME:  "a.n. Rohani",
-  MAX_FILE_MB: 2
+  MAX_INPUT_MB: 20,   // batas file asli sebelum dikompres
+  TARGET_KB: 120      // target ukuran setelah dikompres
 };
 /* ======================================================== */
 
@@ -322,22 +324,59 @@ function sendHeight(){
 new ResizeObserver(sendHeight).observe(document.body);
 window.addEventListener("load", sendHeight);
 
-// Upload bukti transfer
-$("bukti").addEventListener("change", e=>{
+// ---------- Upload bukti transfer: kompres di browser sampai ±KB ----------
+let compressing = false;
+
+function loadImage(file){
+  return new Promise((resolve, reject)=>{
+    const viaImg = ()=>{
+      const u = URL.createObjectURL(file), im = new Image();
+      im.onload = ()=>{ URL.revokeObjectURL(u); resolve(im); };
+      im.onerror = ()=>{ URL.revokeObjectURL(u); reject(new Error("decode")); };
+      im.src = u;
+    };
+    if(window.createImageBitmap){ createImageBitmap(file).then(resolve).catch(viaImg); } else viaImg();
+  });
+}
+const toBlob = (c,q)=> new Promise(r=> c.toBlob(r, "image/jpeg", q));
+const blobToB64 = b => new Promise((res,rej)=>{ const r=new FileReader(); r.onload=()=>res(r.result.split(",")[1]); r.onerror=rej; r.readAsDataURL(b); });
+
+async function compressImage(file){
+  const img = await loadImage(file);
+  const w0 = img.width || img.naturalWidth, h0 = img.height || img.naturalHeight;
+  const c = document.createElement("canvas"), ctx = c.getContext("2d");
+  let best = null;
+  for(const maxW of [1100, 900, 720, 600]){          // makin kecil bila masih kebesaran
+    const sc = Math.min(1, maxW / w0);
+    c.width = Math.round(w0*sc); c.height = Math.round(h0*sc);
+    ctx.fillStyle = "#fff"; ctx.fillRect(0,0,c.width,c.height);
+    ctx.drawImage(img, 0, 0, c.width, c.height);
+    for(const q of [0.72, 0.58, 0.45, 0.32]){
+      const b = await toBlob(c, q);
+      if(b && (!best || b.size < best.size)) best = b;
+      if(b && b.size <= CONFIG.TARGET_KB*1024) return b;
+    }
+  }
+  return best;
+}
+
+$("bukti").addEventListener("change", async e=>{
   const f = e.target.files[0];
   fileData = null; $("preview").style.display = "none";
   if(!f) return;
-  if(!f.type.startsWith("image/") || f.size > CONFIG.MAX_FILE_MB*1024*1024){
-    $("fileErr").style.display = "block"; e.target.value = ""; $("fileLabel").innerHTML = "Ketuk untuk <b>unggah foto bukti transfer</b>"; return;
-  }
+  const reset = ()=>{ $("fileErr").style.display = "block"; e.target.value = ""; $("fileLabel").innerHTML = "Ketuk untuk <b>unggah foto bukti transfer</b>"; };
+  if(!f.type.startsWith("image/") || f.size > CONFIG.MAX_INPUT_MB*1024*1024){ reset(); return; }
   $("fileErr").style.display = "none";
-  const r = new FileReader();
-  r.onload = () => {
-    fileData = { name: f.name, type: f.type, data: r.result.split(",")[1] };
-    $("preview").src = r.result; $("preview").style.display = "block";
-    $("fileLabel").innerHTML = "<b>" + f.name.replace(/[<>&]/g,"") + "</b> — ketuk untuk mengganti";
-  };
-  r.readAsDataURL(f);
+  compressing = true; $("fileLabel").innerHTML = "<b>Memproses gambar…</b>";
+  try{
+    const blob = await compressImage(f);
+    if(!blob) throw new Error("kosong");
+    fileData = { name: "bukti.jpg", type: "image/jpeg", data: await blobToB64(blob) };
+    const old = $("preview").src; if(old && old.startsWith("blob:")) URL.revokeObjectURL(old);
+    $("preview").src = URL.createObjectURL(blob); $("preview").style.display = "block";
+    $("fileLabel").innerHTML = "<b>" + f.name.replace(/[<>&]/g,"") + "</b> → " + Math.round(blob.size/1024) + " KB — ketuk untuk mengganti";
+  }catch(_){ reset(); }
+  compressing = false;
 });
 
 function setBad(el, bad){ el.closest(".field").classList.toggle("bad", bad); return !bad; }
@@ -363,6 +402,7 @@ function normWA(v){
 $("form").addEventListener("submit", async e=>{
   e.preventDefault();
   $("alert").className = "alert";
+  if(compressing){ showErr("Tunggu sebentar, gambar sedang diproses…"); return; }
   if(!validate()){ document.querySelector(".bad, #fileErr[style*='block'], #agreeErr[style*='block']")?.scrollIntoView({behavior:"smooth",block:"center"}); return; }
   if(CONFIG.SCRIPT_URL.startsWith("GANTI")){ showErr("URL Apps Script belum diisi di CONFIG (lihat README)."); return; }
 
