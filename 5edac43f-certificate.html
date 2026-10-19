@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>E-Sertifikat Menzil Bersama</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Inter:wght@300;400;500;600&family=Playfair+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#150205;--red:#8c0f1c;--red2:#b3172a;--gold:#d4af37;--gold2:#f4dc8f;--gold3:#a8841f;--text:#f6eede;--muted:#c9b99a}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;color:var(--text);min-height:100vh;background:radial-gradient(900px 500px at 50% -10%,rgba(179,23,42,.45),transparent 70%),linear-gradient(180deg,#2a050b,var(--bg))}
+.gold-text{background:linear-gradient(180deg,var(--gold2),var(--gold) 55%,var(--gold3));-webkit-background-clip:text;background-clip:text;color:transparent}
+.top{max-width:520px;margin:0 auto;padding:48px 20px 20px;text-align:center}
+.top h1{font-family:'Cinzel',serif;font-size:28px;margin-bottom:6px}
+.top p{color:var(--muted);font-size:14px;margin-bottom:22px}
+.row{display:flex;gap:10px}
+input{flex:1;background:rgba(0,0,0,.35);border:1px solid rgba(212,175,55,.3);border-radius:10px;color:var(--text);padding:13px 14px;font:inherit;text-transform:uppercase;letter-spacing:.06em;outline:none}
+input:focus{border-color:var(--gold)}
+button{padding:0 22px;border:0;border-radius:10px;cursor:pointer;font-family:'Cinzel',serif;font-weight:700;letter-spacing:.12em;color:#2a0508;background:linear-gradient(180deg,var(--gold2),var(--gold) 55%,var(--gold3))}
+button.alt{background:linear-gradient(180deg,var(--red2),var(--red));color:#fff;border:1px solid var(--gold);padding:12px 26px}
+#msg{margin-top:14px;font-size:13.5px;color:#ff9a9a;min-height:20px}
+.actions{text-align:center;margin:20px 0 10px;display:none}
+.stage{padding:10px 16px 50px;display:none;overflow-x:auto}
+
+/* === SERTIFIKAT: A4 landscape 297 x 210 mm === */
+.cert{
+  width:297mm;height:210mm;margin:0 auto;position:relative;color:#2b0a0d;
+  background:
+    radial-gradient(circle at 50% 50%,#fffaf0 0%,#f7ecd2 70%,#efdfb8 100%);
+  padding:11mm;
+}
+.cert .frame{position:absolute;inset:7mm;border:2.2mm solid var(--red);outline:.5mm solid var(--gold);outline-offset:-3.6mm}
+.cert .frame2{position:absolute;inset:14mm;border:.35mm solid var(--gold3)}
+.cert .corner{position:absolute;width:20mm;height:20mm;border:.8mm solid var(--gold3)}
+.cert .c1{top:11mm;left:11mm;border-right:0;border-bottom:0}
+.cert .c2{top:11mm;right:11mm;border-left:0;border-bottom:0}
+.cert .c3{bottom:11mm;left:11mm;border-right:0;border-top:0}
+.cert .c4{bottom:11mm;right:11mm;border-left:0;border-top:0}
+.cert .in{position:relative;height:100%;display:flex;flex-direction:column;align-items:center;text-align:center;padding:12mm 22mm 8mm}
+.org{font-family:'Cinzel',serif;font-weight:700;font-size:22pt;letter-spacing:.04em;color:var(--red)}
+.org small{display:block;font-size:8pt;letter-spacing:.7em;color:var(--gold3);margin-top:1mm}
+.line{width:70mm;height:.4mm;background:linear-gradient(90deg,transparent,var(--gold3),transparent);margin:5mm 0}
+.title{font-family:'Cinzel',serif;font-weight:900;font-size:36pt;letter-spacing:.14em;color:var(--red)}
+.title-sub{font-family:'Cinzel',serif;letter-spacing:.35em;font-size:10pt;color:var(--gold3);margin-top:1mm}
+.given{margin-top:7mm;font-size:10.5pt;color:#5a3a3d}
+.name{font-family:'Playfair Display',serif;font-style:italic;font-weight:600;font-size:34pt;color:#2b0a0d;margin:3mm 0 1mm;padding:0 12mm;border-bottom:.4mm solid var(--gold3);line-height:1.2;max-width:230mm}
+.desc{margin-top:5mm;font-size:11pt;line-height:1.7;color:#4a2a2d;max-width:215mm}
+.desc b{color:var(--red)}
+.rank{margin-top:4mm;display:none;font-family:'Cinzel',serif;font-weight:700;font-size:15pt;letter-spacing:.1em;color:var(--red)}
+.sign{margin-top:auto;width:100%;display:flex;justify-content:space-between;align-items:flex-end;font-size:9pt;color:#4a2a2d}
+.sign div{width:68mm}
+.sign .ln{border-top:.3mm solid #4a2a2d;margin-top:15mm;padding-top:1.5mm;font-weight:600}
+.sign .mid{width:auto;font-size:8pt;color:var(--gold3);letter-spacing:.08em}
+.verify{font-size:7.5pt;color:#8a6d4a;margin-top:2mm;letter-spacing:.06em}
+.motto{font-family:'Playfair Display',serif;font-style:italic;font-size:9.5pt;color:var(--red);margin-bottom:2mm}
+
+@page{size:A4 landscape;margin:0}
+@media print{
+  body{background:#fff}
+  .top,.actions{display:none!important}
+  .stage{padding:0;overflow:visible;display:block!important}
+  .cert{margin:0;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+@media(max-width:700px){.row{flex-direction:column}button{padding:13px}}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <h1 class="gold-text">E-Sertifikat</h1>
+  <p>Masukkan No. Registrasi Anda untuk melihat dan mencetak sertifikat.</p>
+  <form class="row" id="f">
+    <input id="rid" placeholder="DMI-2611-001" autocomplete="off" required>
+    <button type="submit">CARI</button>
+  </form>
+  <div id="msg"></div>
+</div>
+
+<div class="actions" id="actions"><button class="alt" onclick="window.print()">CETAK / SIMPAN PDF</button></div>
+
+<div class="stage" id="stage">
+  <div class="cert" id="cert">
+    <div class="frame"></div><div class="frame2"></div>
+    <div class="corner c1"></div><div class="corner c2"></div><div class="corner c3"></div><div class="corner c4"></div>
+    <div class="in">
+      <div class="org">D’raas Menzil<small>INDONESIA</small></div>
+      <div class="line"></div>
+      <div class="title">SERTIFIKAT</div>
+      <div class="title-sub">PENGHARGAAN PESERTA</div>
+      <div class="given">Diberikan kepada</div>
+      <div class="name" id="cName">—</div>
+      <div class="desc" id="cDesc"></div>
+      <div class="rank" id="cRank"></div>
+      <div class="sign">
+        <div><div class="ln">Hani Akhwat Menzil Indonesia</div></div>
+        <div class="mid"><div class="motto">Menzil Jalan Menuju RidhaNya</div><div class="verify" id="cId"></div></div>
+        <div><div class="ln">Founder D’raas Menzil Indonesia</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ============ KONFIGURASI ============ */
+const CONFIG = {
+  SCRIPT_URL: "GANTI_DENGAN_URL_WEB_APP_APPS_SCRIPT",
+  EVENT_TEXT: "Event Menzil Bersama – Latber dan Edukasi Menzil",
+  EVENT_DATE: "Ahad, 22 November 2026",
+  EVENT_PLACE: "Lanud Suryadarma Kalijati"
+};
+/* ===================================== */
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+async function load(id){
+  $("msg").textContent = "Mencari…";
+  $("stage").style.display = $("actions").style.display = "none";
+  try{
+    const r = await fetch(CONFIG.SCRIPT_URL + "?action=cert&id=" + encodeURIComponent(id));
+    const o = await r.json();
+    if(!o.ok) throw new Error(o.error);
+    const d = o.data;
+    $("cName").textContent = d.nama;
+    $("cDesc").innerHTML = "atas partisipasinya dalam <b>" + esc(CONFIG.EVENT_TEXT) + "</b><br>kategori <b>" + esc(d.kategori) + "</b>, yang diselenggarakan pada " + esc(CONFIG.EVENT_DATE) + " di " + esc(CONFIG.EVENT_PLACE) + ".";
+    if(d.peringkat){ $("cRank").style.display = "block"; $("cRank").textContent = "★ " + d.peringkat + " ★"; } else $("cRank").style.display = "none";
+    $("cId").textContent = "No. " + d.id;
+    $("msg").textContent = "";
+    $("stage").style.display = "block"; $("actions").style.display = "block";
+    fit();
+  }catch(e){ $("msg").textContent = e.message || "Gagal memuat. Coba lagi."; }
+}
+// skala pratinjau agar muat di layar kecil (tidak mempengaruhi cetak)
+function fit(){
+  const c = $("cert"), w = c.offsetWidth, avail = window.innerWidth - 32;
+  c.style.zoom = avail < w ? (avail / w) : 1;
+}
+window.addEventListener("resize", fit);
+window.addEventListener("beforeprint", ()=>{ $("cert").style.zoom = 1; });
+window.addEventListener("afterprint", fit);
+
+$("f").addEventListener("submit", e=>{ e.preventDefault(); load($("rid").value.trim()); });
+const q = new URLSearchParams(location.search).get("id");
+if(q){ $("rid").value = q; load(q); }
+</script>
+</body>
+</html>
