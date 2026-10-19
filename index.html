@@ -155,6 +155,10 @@ button.submit{min-height:54px}
  .ticket{max-width:100%;padding:12px 20px}
  .ticket b{font-size:clamp(20px,6vw,28px);overflow-wrap:anywhere}
 }
+button.btn{font-family:inherit}
+button.submit.loading::after{content:"";display:inline-block;width:14px;height:14px;margin-left:10px;vertical-align:-2px;border:2px solid rgba(42,5,8,.35);border-top-color:#2a0508;border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.rule::after{content:"✦";display:block;width:max-content;margin:-11px auto 0;padding:0 12px;background:var(--bg2);color:var(--gold);font-size:12px;line-height:20px}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{transition:none!important;animation:none!important}}
 </style>
 </head>
@@ -227,7 +231,7 @@ button.submit{min-height:54px}
             <label class="opt"><input type="radio" name="kategori" value="Menzil"><span>Menzil</span></label>
             <label class="opt"><input type="radio" name="kategori" value="Ground 140m + Menzil" checked><span>Keduanya<small>Ground + Menzil</small></span></label>
           </div>
-          <div class="hint">Piagam juara 1, 2, 3 diberikan untuk kategori Ground 140m dan Menzil.</div>
+          <div class="hint">Piagam juara 1, 2, 3 diberikan untuk kategori Ground 140m dan Menzil. Peringkat ditetapkan panitia dan otomatis tercantum pada e-sertifikat Anda.</div>
         </div>
         <div class="grid" style="margin-top:16px">
           <div class="field">
@@ -262,7 +266,7 @@ button.submit{min-height:54px}
           <label>Bukti Transfer <i>*</i></label>
           <label class="file" for="bukti">
             <input id="bukti" type="file" accept="image/*">
-            <span id="fileLabel">Ketuk untuk <b>unggah foto bukti transfer</b> (otomatis dikompres jadi ±100 KB)</span>
+            <span id="fileLabel">Ketuk untuk <b>unggah foto bukti transfer</b> <br><small>otomatis dikompres jadi ±100 KB</small></span>
             <img id="preview" alt="Pratinjau bukti transfer">
           </label>
           <div class="err" id="fileErr">Unggah bukti transfer (file gambar).</div>
@@ -274,17 +278,18 @@ button.submit{min-height:54px}
         <div class="err" id="agreeErr" style="margin-top:6px">Centang persetujuan terlebih dahulu.</div>
 
         <button class="submit" id="btn" type="submit">DAFTAR SEKARANG</button>
-        <div class="alert" id="alert"></div>
+        <div class="alert" id="alert" role="alert" aria-live="assertive"></div>
       </div>
 
-      <div id="success">
+      <div id="success" role="status" aria-live="polite">
         <div class="check">✓</div>
         <h2 class="gold-text">Pendaftaran Berhasil</h2>
         <p style="color:var(--muted)">Barakallahu fiikum, <b id="sName" style="color:var(--text)"></b>.<br>Simpan nomor registrasi Anda:</p>
         <div class="ticket"><small>No. Registrasi</small><b id="sId"></b></div>
-        <p style="color:var(--muted);font-size:13px">Panitia akan memverifikasi pembayaran dan menghubungi Anda via WhatsApp.</p>
+        <p style="color:var(--muted);font-size:13px">Panitia akan memverifikasi pembayaran dan menghubungi Anda via WhatsApp.<br>Setelah event dan disetujui panitia, e-sertifikat dapat dibuka dengan nomor ini di <a id="certLink" href="certificate.html" style="color:var(--gold2)">halaman sertifikat</a> dan juga dikirim ke email Anda.</p>
         <div class="btns">
           <a class="btn fill" id="waBtn" target="_blank" rel="noopener">Konfirmasi via WhatsApp</a>
+          <button class="btn" type="button" id="copyBtn">Salin No. Registrasi</button>
           <a class="btn" href="" id="newBtn">Daftarkan peserta lain</a>
         </div>
       </div>
@@ -415,20 +420,25 @@ $("form").addEventListener("submit", async e=>{
     website: f.get("website") || "", bukti: fileData
   };
 
-  const btn = $("btn"); btn.disabled = true; btn.textContent = "MENGIRIM…";
+  const btn = $("btn"); btn.disabled = true; btn.textContent = "MENGIRIM…"; btn.classList.add("loading");
+  const ctl = new AbortController(), timer = setTimeout(()=>ctl.abort(), 60000);
   try{
-    const res = await fetch(CONFIG.SCRIPT_URL, { method:"POST", headers:{"Content-Type":"text/plain;charset=utf-8"}, body: JSON.stringify(payload) });
+    const res = await fetch(CONFIG.SCRIPT_URL, { method:"POST", headers:{"Content-Type":"text/plain;charset=utf-8"}, body: JSON.stringify(payload), signal: ctl.signal });
     const out = await res.json();
     if(!out.ok) throw new Error(out.error || "Gagal menyimpan data.");
     $("sName").textContent = payload.nama; $("sId").textContent = out.id;
     const msg = `Assalamu'alaikum Panitia Menzil Bersama. Saya sudah mendaftar.%0ANo. Registrasi: ${out.id}%0ANama: ${encodeURIComponent(payload.nama)}%0AKategori: ${encodeURIComponent(payload.kategori)}`;
-    $("waBtn").href = `https://wa.me/${CONFIG.ADMIN_WA}?text=${msg}`;
+    $("waBtn").href = `https://wa.me/${CONFIG.ADMIN_WA.replace(/\D/g,"")}?text=${msg}`;
+    $("certLink").href = "certificate.html?id=" + encodeURIComponent(out.id);
+    $("copyBtn").onclick = () => { navigator.clipboard?.writeText(out.id).then(()=>{ $("copyBtn").textContent = "Tersalin ✓"; }).catch(()=>{}); };
     $("formBody").style.display = "none"; $("success").style.display = "block";
     window.scrollTo({top:0,behavior:"smooth"}); try{parent.postMessage({dmScrollTop:true},"*")}catch(_){}
   }catch(err){
-    showErr(err.message || "Terjadi kesalahan jaringan. Coba lagi.");
-    btn.disabled = false; btn.textContent = "DAFTAR SEKARANG";
-  }
+    showErr(err.name === "AbortError" ? "Koneksi terlalu lama. Periksa sinyal lalu coba lagi." :
+            /fetch|network/i.test(err.message) ? "Terjadi kesalahan jaringan. Periksa koneksi lalu coba lagi." :
+            (err.message || "Terjadi kesalahan. Coba lagi."));
+    btn.disabled = false; btn.textContent = "DAFTAR SEKARANG"; btn.classList.remove("loading");
+  }finally{ clearTimeout(timer); }
 });
 function showErr(m){ const a=$("alert"); a.textContent = m; a.className = "alert err"; }
 $("newBtn").addEventListener("click", e=>{ e.preventDefault(); location.reload(); });
