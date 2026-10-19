@@ -62,13 +62,34 @@ button.alt{background:linear-gradient(180deg,var(--red2),var(--red));color:#fff;
   .cert{margin:0;-webkit-print-color-adjust:exact;print-color-adjust:exact}
 }
 @media(max-width:700px){.row{flex-direction:column}button{padding:13px}}
+
+/* Penyempurnaan responsif dan aksesibilitas */
+.top{padding-top:clamp(28px,6vw,54px)}
+.top h1{letter-spacing:.045em;text-shadow:0 8px 28px rgba(0,0,0,.18)}
+.top p{line-height:1.7}
+.row{align-items:stretch}
+input{min-width:0;transition:border-color .2s,box-shadow .2s}
+input:focus-visible,button:focus-visible{outline:3px solid rgba(244,220,143,.45);outline-offset:3px}
+button{min-height:48px;transition:transform .2s,filter .2s}
+button:hover{filter:brightness(1.07);transform:translateY(-1px)}
+button:active{transform:translateY(0)}
+.stage{max-width:100%;overscroll-behavior-x:contain}
+.cert{box-shadow:0 22px 70px rgba(0,0,0,.25)}
+#msg{line-height:1.5}
+@media(max-width:700px){
+ .top{padding-left:18px;padding-right:18px}
+ .row{gap:9px}
+ .row button{width:100%}
+ .stage{padding-left:8px;padding-right:8px}
+}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
 </style>
 </head>
 <body>
 
 <div class="top">
   <h1 class="gold-text">E-Sertifikat</h1>
-  <p>Masukkan No. Registrasi Anda untuk melihat dan mencetak sertifikat.</p>
+  <p>Masukkan nomor registrasi untuk melihat sertifikat yang telah disetujui panitia. Sertifikat tersedia untuk dicetak atau disimpan sebagai PDF.</p>
   <form class="row" id="f">
     <input id="rid" placeholder="DMI-2611-001" autocomplete="off" required>
     <button type="submit">CARI</button>
@@ -103,7 +124,7 @@ button.alt{background:linear-gradient(180deg,var(--red2),var(--red));color:#fff;
 <script>
 /* ============ KONFIGURASI ============ */
 const CONFIG = {
-  SCRIPT_URL: "https://script.google.com/macros/s/AKfycbyASAqGHXkZh3rfHBDq2Ybfrfp5dOZYCSjdCOdz2vfKvbstbH5b5xXyQy3gMhDc-eR1/exec",
+  SCRIPT_URL: "GANTI_DENGAN_URL_WEB_APP_APPS_SCRIPT",
   EVENT_TEXT: "Event Menzil Bersama – Latber dan Edukasi Menzil",
   EVENT_DATE: "Ahad, 22 November 2026",
   EVENT_PLACE: "Lanud Suryadarma Kalijati"
@@ -113,7 +134,9 @@ const $ = id => document.getElementById(id);
 const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
 async function load(id){
-  $("msg").textContent = "Mencari…";
+  if(!id){ $("msg").textContent = "Masukkan nomor registrasi terlebih dahulu."; return; }
+  if(CONFIG.SCRIPT_URL.startsWith("GANTI")){ $("msg").textContent = "Halaman belum dikonfigurasi. Hubungi panitia."; return; }
+  $("msg").textContent = "Mencari sertifikat…";
   $("stage").style.display = $("actions").style.display = "none";
   try{
     const r = await fetch(CONFIG.SCRIPT_URL + "?action=cert&id=" + encodeURIComponent(id));
