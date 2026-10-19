@@ -3,167 +3,395 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>E-Sertifikat Menzil Bersama</title>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Inter:wght@300;400;500;600&family=Playfair+Display:ital@0;1&display=swap" rel="stylesheet">
+<title>Pendaftaran Menzil Bersama</title>
+<meta name="description" content="Pendaftaran Event Menzil Bersama – Latber dan Edukasi Menzil, D'raas Menzil Indonesia.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Inter:wght@300;400;500;600&family=Playfair+Display:ital@1&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#150205;--red:#8c0f1c;--red2:#b3172a;--gold:#d4af37;--gold2:#f4dc8f;--gold3:#a8841f;--text:#f6eede;--muted:#c9b99a}
+:root{
+  --bg:#150205; --bg2:#2a050b; --card:#1d0409e6;
+  --red:#8c0f1c; --red2:#b3172a;
+  --gold:#d4af37; --gold2:#f4dc8f; --gold3:#a8841f;
+  --text:#f6eede; --muted:#c9b99a; --line:rgba(212,175,55,.35);
+  --err:#ff8a8a; --ok:#9be3a8;
+}
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Inter',sans-serif;color:var(--text);min-height:100vh;background:radial-gradient(900px 500px at 50% -10%,rgba(179,23,42,.45),transparent 70%),linear-gradient(180deg,#2a050b,var(--bg))}
-.gold-text{background:linear-gradient(180deg,var(--gold2),var(--gold) 55%,var(--gold3));-webkit-background-clip:text;background-clip:text;color:transparent}
-.top{max-width:520px;margin:0 auto;padding:48px 20px 20px;text-align:center}
-.top h1{font-family:'Cinzel',serif;font-size:28px;margin-bottom:6px}
-.top p{color:var(--muted);font-size:14px;margin-bottom:22px}
-.row{display:flex;gap:10px}
-input{flex:1;background:rgba(0,0,0,.35);border:1px solid rgba(212,175,55,.3);border-radius:10px;color:var(--text);padding:13px 14px;font:inherit;text-transform:uppercase;letter-spacing:.06em;outline:none}
-input:focus{border-color:var(--gold)}
-button{padding:0 22px;border:0;border-radius:10px;cursor:pointer;font-family:'Cinzel',serif;font-weight:700;letter-spacing:.12em;color:#2a0508;background:linear-gradient(180deg,var(--gold2),var(--gold) 55%,var(--gold3))}
-button.alt{background:linear-gradient(180deg,var(--red2),var(--red));color:#fff;border:1px solid var(--gold);padding:12px 26px}
-#msg{margin-top:14px;font-size:13.5px;color:#ff9a9a;min-height:20px}
-.actions{text-align:center;margin:20px 0 10px;display:none}
-.stage{padding:10px 16px 50px;display:none;overflow-x:auto}
-
-/* === SERTIFIKAT: A4 landscape 297 x 210 mm === */
-.cert{
-  width:297mm;height:210mm;margin:0 auto;position:relative;color:#2b0a0d;
+html{scroll-behavior:smooth}
+body{
+  font-family:'Inter',system-ui,sans-serif;color:var(--text);line-height:1.55;
   background:
-    radial-gradient(circle at 50% 50%,#fffaf0 0%,#f7ecd2 70%,#efdfb8 100%);
-  padding:11mm;
+    radial-gradient(900px 500px at 50% -10%, rgba(179,23,42,.45), transparent 70%),
+    radial-gradient(700px 500px at 100% 100%, rgba(140,15,28,.35), transparent 70%),
+    linear-gradient(180deg,var(--bg2),var(--bg));
+  min-height:100vh;
 }
-.cert .frame{position:absolute;inset:7mm;border:2.2mm solid var(--red);outline:.5mm solid var(--gold);outline-offset:-3.6mm}
-.cert .frame2{position:absolute;inset:14mm;border:.35mm solid var(--gold3)}
-.cert .corner{position:absolute;width:20mm;height:20mm;border:.8mm solid var(--gold3)}
-.cert .c1{top:11mm;left:11mm;border-right:0;border-bottom:0}
-.cert .c2{top:11mm;right:11mm;border-left:0;border-bottom:0}
-.cert .c3{bottom:11mm;left:11mm;border-right:0;border-top:0}
-.cert .c4{bottom:11mm;right:11mm;border-left:0;border-top:0}
-.cert .in{position:relative;height:100%;display:flex;flex-direction:column;align-items:center;text-align:center;padding:12mm 22mm 8mm}
-.org{font-family:'Cinzel',serif;font-weight:700;font-size:22pt;letter-spacing:.04em;color:var(--red)}
-.org small{display:block;font-size:8pt;letter-spacing:.7em;color:var(--gold3);margin-top:1mm}
-.line{width:70mm;height:.4mm;background:linear-gradient(90deg,transparent,var(--gold3),transparent);margin:5mm 0}
-.title{font-family:'Cinzel',serif;font-weight:900;font-size:36pt;letter-spacing:.14em;color:var(--red)}
-.title-sub{font-family:'Cinzel',serif;letter-spacing:.35em;font-size:10pt;color:var(--gold3);margin-top:1mm}
-.given{margin-top:7mm;font-size:10.5pt;color:#5a3a3d}
-.name{font-family:'Playfair Display',serif;font-style:italic;font-weight:600;font-size:34pt;color:#2b0a0d;margin:3mm 0 1mm;padding:0 12mm;border-bottom:.4mm solid var(--gold3);line-height:1.2;max-width:230mm}
-.desc{margin-top:5mm;font-size:11pt;line-height:1.7;color:#4a2a2d;max-width:215mm}
-.desc b{color:var(--red)}
-.rank{margin-top:4mm;display:none;font-family:'Cinzel',serif;font-weight:700;font-size:15pt;letter-spacing:.1em;color:var(--red)}
-.sign{margin-top:auto;width:100%;display:flex;justify-content:space-between;align-items:flex-end;font-size:9pt;color:#4a2a2d}
-.sign div{width:68mm}
-.sign .ln{border-top:.3mm solid #4a2a2d;margin-top:15mm;padding-top:1.5mm;font-weight:600}
-.sign .mid{width:auto;font-size:8pt;color:var(--gold3);letter-spacing:.08em}
-.verify{font-size:7.5pt;color:#8a6d4a;margin-top:2mm;letter-spacing:.06em}
-.motto{font-family:'Playfair Display',serif;font-style:italic;font-size:9.5pt;color:var(--red);margin-bottom:2mm}
+.wrap{max-width:860px;margin:0 auto;padding:40px 20px 56px}
+.gold-text{background:linear-gradient(180deg,var(--gold2),var(--gold) 55%,var(--gold3));-webkit-background-clip:text;background-clip:text;color:transparent}
 
-@page{size:A4 landscape;margin:0}
-@media print{
-  body{background:#fff}
-  .top,.actions{display:none!important}
-  .stage{padding:0;overflow:visible;display:block!important}
-  .cert{margin:0;-webkit-print-color-adjust:exact;print-color-adjust:exact}
-}
-@media(max-width:700px){.row{flex-direction:column}button{padding:13px}}
+/* Header */
+header{text-align:center;margin-bottom:34px}
+.brand{font-family:'Cinzel',serif;font-weight:700;font-size:clamp(26px,5vw,38px);letter-spacing:.02em}
+.brand small{display:block;font-size:.42em;letter-spacing:.7em;margin-top:2px;color:var(--gold);font-weight:500}
+.tagline{margin-top:12px;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+.tagline i{display:inline-block;width:4px;height:4px;background:var(--gold);border-radius:50%;margin:0 10px;vertical-align:middle}
+.rule{height:1px;margin:26px auto;max-width:420px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+.badge{display:inline-block;font-family:'Cinzel',serif;font-size:12px;letter-spacing:.35em;padding:7px 22px;border:1px solid var(--gold);color:var(--gold2);transform:skewX(-8deg)}
+h1{font-family:'Cinzel',serif;font-weight:900;font-size:clamp(38px,9vw,72px);line-height:1;margin:16px 0 8px;letter-spacing:.01em}
+.sub{font-family:'Cinzel',serif;font-weight:700;letter-spacing:.22em;font-size:clamp(12px,2.6vw,16px);color:var(--text)}
+.by{margin-top:12px;font-family:'Playfair Display',serif;font-style:italic;color:var(--muted);font-size:14px}
 
-/* Penyempurnaan responsif dan aksesibilitas */
-.top{padding-top:clamp(28px,6vw,54px)}
-.top h1{letter-spacing:.045em;text-shadow:0 8px 28px rgba(0,0,0,.18)}
-.top p{line-height:1.7}
-.row{align-items:stretch}
-input{min-width:0;transition:border-color .2s,box-shadow .2s}
-input:focus-visible,button:focus-visible{outline:3px solid rgba(244,220,143,.45);outline-offset:3px}
-button{min-height:48px;transition:transform .2s,filter .2s}
-button:hover{filter:brightness(1.07);transform:translateY(-1px)}
-button:active{transform:translateY(0)}
-.stage{max-width:100%;overscroll-behavior-x:contain}
-.cert{box-shadow:0 22px 70px rgba(0,0,0,.25)}
-#msg{line-height:1.5}
-@media(max-width:700px){
- .top{padding-left:18px;padding-right:18px}
- .row{gap:9px}
- .row button{width:100%}
- .stage{padding-left:8px;padding-right:8px}
+/* Info cards */
+.info{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin-bottom:26px}
+.info div{border:1px solid var(--line);border-radius:14px;padding:16px 18px;background:rgba(255,255,255,.02)}
+.info span{display:block;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold)}
+.info b{display:block;margin-top:4px;font-weight:600;font-size:15px}
+.info em{display:block;font-style:normal;font-size:12px;color:var(--muted);margin-top:2px}
+
+/* Form card */
+.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:clamp(22px,5vw,40px);box-shadow:0 30px 80px -30px #000, inset 0 0 0 1px rgba(255,255,255,.02);backdrop-filter:blur(6px)}
+.sec{display:flex;align-items:center;gap:12px;margin:34px 0 18px;font-family:'Cinzel',serif;font-size:14px;letter-spacing:.2em;text-transform:uppercase}
+.sec:first-child{margin-top:0}
+.sec b{width:28px;height:28px;border-radius:50%;border:1px solid var(--gold);display:grid;place-items:center;font-size:12px;color:var(--gold2)}
+.sec::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,var(--line),transparent)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.full{grid-column:1/-1}
+label{display:block;font-size:12.5px;font-weight:500;color:var(--gold2);margin-bottom:6px;letter-spacing:.03em}
+label i{color:var(--red2);font-style:normal}
+input,select,textarea{
+  width:100%;background:rgba(0,0,0,.35);border:1px solid rgba(212,175,55,.25);border-radius:10px;
+  color:var(--text);padding:13px 14px;font:inherit;font-size:15px;transition:.2s;outline:none;
 }
-@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--gold) 50%),linear-gradient(135deg,var(--gold) 50%,transparent 50%);background-position:calc(100% - 20px) 50%,calc(100% - 14px) 50%;background-size:6px 6px;background-repeat:no-repeat}
+select option{background:#1d0409}
+input::placeholder,textarea::placeholder{color:#8d7c65}
+input:focus,select:focus,textarea:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(212,175,55,.15)}
+.hint{font-size:11.5px;color:var(--muted);margin-top:5px}
+.err{font-size:11.5px;color:var(--err);margin-top:5px;display:none}
+.field.bad input,.field.bad select{border-color:var(--err)}
+.field.bad .err{display:block}
+
+/* Radio cards */
+.opts{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.opt input{position:absolute;opacity:0;pointer-events:none}
+.opt span{display:block;text-align:center;padding:13px 8px;border:1px solid rgba(212,175,55,.25);border-radius:10px;cursor:pointer;font-size:13.5px;transition:.2s;background:rgba(0,0,0,.25);color:var(--text);margin:0;font-weight:500}
+.opt span small{display:block;font-size:11px;color:var(--muted);font-weight:400}
+.opt input:checked+span{border-color:var(--gold);background:linear-gradient(180deg,rgba(179,23,42,.55),rgba(140,15,28,.35));box-shadow:0 0 0 1px var(--gold) inset}
+.opt{position:relative}
+
+/* Payment */
+.pay{border:1px dashed var(--gold);border-radius:14px;padding:18px 20px;background:linear-gradient(135deg,rgba(179,23,42,.25),rgba(0,0,0,.2));display:flex;flex-wrap:wrap;gap:18px;justify-content:space-between;align-items:center}
+.pay .amt{font-family:'Cinzel',serif;font-size:30px;font-weight:900}
+.pay small{display:block;color:var(--muted);font-size:12px}
+.pay .acc{font-size:14px;text-align:right}
+.pay .acc b{color:var(--gold2);letter-spacing:.06em}
+.incl{margin-top:12px;font-size:12.5px;color:var(--muted)}
+.incl span{color:var(--gold);margin-right:6px}
+
+.file{border:1px dashed rgba(212,175,55,.4);border-radius:10px;padding:14px;text-align:center;cursor:pointer;background:rgba(0,0,0,.25);transition:.2s;font-size:13.5px;color:var(--muted)}
+.file:hover{border-color:var(--gold)}
+.file input{display:none}
+.file b{color:var(--gold2)}
+#preview{max-width:140px;max-height:140px;border-radius:8px;margin:10px auto 0;display:none;border:1px solid var(--line)}
+
+.agree{display:flex;gap:10px;align-items:flex-start;font-size:13px;color:var(--muted);margin-top:22px}
+.agree input{width:auto;margin-top:3px;accent-color:var(--red2)}
+
+button.submit{
+  margin-top:26px;width:100%;padding:16px;border:0;border-radius:12px;cursor:pointer;
+  font-family:'Cinzel',serif;font-weight:700;letter-spacing:.2em;font-size:15px;color:#2a0508;
+  background:linear-gradient(180deg,var(--gold2),var(--gold) 55%,var(--gold3));
+  box-shadow:0 10px 30px -10px rgba(212,175,55,.6);transition:.2s;
+}
+button.submit:hover{transform:translateY(-1px);filter:brightness(1.05)}
+button.submit:disabled{opacity:.6;cursor:wait;transform:none}
+.alert{margin-top:16px;padding:12px 14px;border-radius:10px;font-size:13.5px;display:none}
+.alert.err{display:block;border:1px solid var(--err);color:var(--err);background:rgba(255,100,100,.08)}
+
+/* Success */
+#success{display:none;text-align:center;padding:10px 0}
+.check{width:72px;height:72px;border-radius:50%;margin:0 auto 18px;display:grid;place-items:center;border:1px solid var(--gold);font-size:32px;color:var(--gold2);background:radial-gradient(circle,rgba(212,175,55,.18),transparent 70%)}
+#success h2{font-family:'Cinzel',serif;font-size:26px;margin-bottom:8px}
+.ticket{display:inline-block;margin:18px 0;padding:14px 30px;border:1px solid var(--gold);border-radius:12px;background:rgba(0,0,0,.3)}
+.ticket small{display:block;font-size:11px;letter-spacing:.2em;color:var(--gold);text-transform:uppercase}
+.ticket b{font-family:'Cinzel',serif;font-size:28px;letter-spacing:.08em}
+.btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:14px}
+.btn{padding:12px 22px;border-radius:10px;border:1px solid var(--gold);color:var(--gold2);text-decoration:none;font-size:13.5px;font-weight:500;cursor:pointer;background:transparent}
+.btn.fill{background:linear-gradient(180deg,var(--red2),var(--red));color:#fff;border-color:var(--gold)}
+
+footer{text-align:center;margin-top:34px;font-family:'Playfair Display',serif;font-style:italic;color:var(--gold2);font-size:17px}
+footer small{display:block;margin-top:8px;font-family:'Inter',sans-serif;font-style:normal;font-size:11px;color:var(--muted);letter-spacing:.1em}
+.hp{position:absolute;left:-9999px;opacity:0}
+
+@media(max-width:640px){
+  .grid{grid-template-columns:1fr}
+  .opts{grid-template-columns:1fr}
+  .pay .acc{text-align:left}
+}
+
+/* Modern polish: responsif, konsisten, dan tetap mempertahankan alur form */
+.wrap{width:min(100%,900px);padding-top:clamp(24px,5vw,48px)}
+header{margin-bottom:clamp(24px,4vw,36px)}
+.brand{line-height:1.2}
+.card{box-shadow:0 24px 70px -32px rgba(0,0,0,.85),inset 0 0 0 1px rgba(255,255,255,.025)}
+.info>div{transition:transform .2s,border-color .2s,background .2s}
+.info>div:hover{transform:translateY(-2px);border-color:rgba(212,175,55,.6);background:rgba(255,255,255,.035)}
+input,select,textarea{min-height:47px}
+textarea{resize:vertical}
+input:focus-visible,select:focus-visible,textarea:focus-visible,button:focus-visible,a:focus-visible{outline:3px solid rgba(244,220,143,.42);outline-offset:2px}
+.opt span{height:100%;display:flex;flex-direction:column;justify-content:center;min-height:48px}
+.file{display:block;line-height:1.65}
+button.submit{min-height:54px}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:44px}
+.alert{line-height:1.55}
+@media(max-width:640px){
+ .wrap{padding:24px 14px 36px}
+ .tagline{line-height:1.9;letter-spacing:.1em}
+ .card{border-radius:16px;padding:22px 17px}
+ .sec{letter-spacing:.12em;font-size:12px}
+ .pay{padding:16px}
+ .pay .amt{font-size:26px}
+ .ticket{max-width:100%;padding:12px 20px}
+ .ticket b{font-size:clamp(20px,6vw,28px);overflow-wrap:anywhere}
+}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{transition:none!important;animation:none!important}}
 </style>
 </head>
 <body>
+<div class="wrap">
 
-<div class="top">
-  <h1 class="gold-text">E-Sertifikat</h1>
-  <p>Masukkan nomor registrasi untuk melihat sertifikat yang telah disetujui panitia. Sertifikat tersedia untuk dicetak atau disimpan sebagai PDF.</p>
-  <form class="row" id="f">
-    <input id="rid" placeholder="DMI-2611-001" autocomplete="off" required>
-    <button type="submit">CARI</button>
-  </form>
-  <div id="msg"></div>
-</div>
+  <header>
+    <div class="brand gold-text">D’raas Menzil<small>INDONESIA</small></div>
+    <p class="tagline">Membangun Karakter<i></i>Melatih Fisik<i></i>Menguatkan Ukhuwah</p>
+    <div class="rule"></div>
+    <span class="badge">EVENT</span>
+    <h1 class="gold-text">MENZIL BERSAMA</h1>
+    <p class="sub">LATBER DAN EDUKASI MENZIL</p>
+    <p class="by">Bersama Hani Akhwat Menzil Indonesia dan Founder D’raas Menzil Indonesia</p>
+  </header>
 
-<div class="actions" id="actions"><button class="alt" onclick="window.print()">CETAK / SIMPAN PDF</button></div>
+  <section class="info" aria-label="Informasi event">
+    <div><span>Hari / Tanggal</span><b id="evDate">Ahad, 22 November 2026</b></div>
+    <div><span>Lokasi</span><b>Lanud Suryadarma Kalijati</b><em>Arah dari Bandung ± 1 jam</em></div>
+    <div><span>Bintang Tamu</span><b>Hoca Halil Kozanoğlu</b><em>&amp; Pak Wagi (Juara 3 Menzil FK Turki 2026)</em></div>
+    <div><span>Biaya</span><b>Rp 150.000</b><em>Free makan siang &amp; coffee break</em></div>
+  </section>
 
-<div class="stage" id="stage">
-  <div class="cert" id="cert">
-    <div class="frame"></div><div class="frame2"></div>
-    <div class="corner c1"></div><div class="corner c2"></div><div class="corner c3"></div><div class="corner c4"></div>
-    <div class="in">
-      <div class="org">D’raas Menzil<small>INDONESIA</small></div>
-      <div class="line"></div>
-      <div class="title">SERTIFIKAT</div>
-      <div class="title-sub">PENGHARGAAN PESERTA</div>
-      <div class="given">Diberikan kepada</div>
-      <div class="name" id="cName">—</div>
-      <div class="desc" id="cDesc"></div>
-      <div class="rank" id="cRank"></div>
-      <div class="sign">
-        <div><div class="ln">Hani Akhwat Menzil Indonesia</div></div>
-        <div class="mid"><div class="motto">Menzil Jalan Menuju RidhaNya</div><div class="verify" id="cId"></div></div>
-        <div><div class="ln">Founder D’raas Menzil Indonesia</div></div>
+  <main class="card">
+    <form id="form" novalidate>
+      <div id="formBody">
+
+        <div class="sec"><b>1</b>Data Peserta</div>
+        <div class="grid">
+          <div class="field full">
+            <label for="nama">Nama Lengkap <i>*</i></label>
+            <input id="nama" name="nama" autocomplete="name" placeholder="Sesuai yang akan dicetak di sertifikat" required>
+            <div class="hint">Nama ini akan tercetak pada e-sertifikat/piagam.</div>
+            <div class="err">Nama lengkap wajib diisi.</div>
+          </div>
+          <div class="field">
+            <label for="gender">Jenis Kelamin <i>*</i></label>
+            <select id="gender" name="gender" required>
+              <option value="">Pilih…</option>
+              <option>Ikhwan</option>
+              <option>Akhwat</option>
+            </select>
+            <div class="err">Pilih jenis kelamin.</div>
+          </div>
+          <div class="field">
+            <label for="wa">No. WhatsApp <i>*</i></label>
+            <input id="wa" name="wa" type="tel" inputmode="tel" autocomplete="tel" placeholder="08xxxxxxxxxx" required>
+            <div class="err">Masukkan nomor WhatsApp yang valid.</div>
+          </div>
+          <div class="field">
+            <label for="email">Email <i>*</i></label>
+            <input id="email" name="email" type="email" autocomplete="email" placeholder="nama@email.com" required>
+            <div class="err">Masukkan email yang valid.</div>
+          </div>
+          <div class="field">
+            <label for="kota">Kota Asal <i>*</i></label>
+            <input id="kota" name="kota" autocomplete="address-level2" placeholder="mis. Bandung" required>
+            <div class="err">Kota asal wajib diisi.</div>
+          </div>
+          <div class="field full">
+            <label for="klub">Klub / Komunitas</label>
+            <input id="klub" name="klub" placeholder="Opsional">
+          </div>
+        </div>
+
+        <div class="sec"><b>2</b>Kategori Keikutsertaan</div>
+        <div class="field">
+          <div class="opts" role="radiogroup">
+            <label class="opt"><input type="radio" name="kategori" value="Ground 140m"><span>Ground 140m</span></label>
+            <label class="opt"><input type="radio" name="kategori" value="Menzil"><span>Menzil</span></label>
+            <label class="opt"><input type="radio" name="kategori" value="Ground 140m + Menzil" checked><span>Keduanya<small>Ground + Menzil</small></span></label>
+          </div>
+          <div class="hint">Piagam juara 1, 2, 3 diberikan untuk kategori Ground 140m dan Menzil.</div>
+        </div>
+        <div class="grid" style="margin-top:16px">
+          <div class="field">
+            <label for="level">Pengalaman Memanah</label>
+            <select id="level" name="level">
+              <option>Pemula</option>
+              <option>Menengah</option>
+              <option>Mahir</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="catatan">Catatan (opsional)</label>
+            <input id="catatan" name="catatan" placeholder="Alergi makanan, dll.">
+          </div>
+        </div>
+
+        <div class="sec"><b>3</b>Pembayaran</div>
+        <div class="pay">
+          <div>
+            <small>Biaya pendaftaran</small>
+            <div class="amt gold-text" id="fee">Rp 150.000</div>
+          </div>
+          <div class="acc">
+            <small>Transfer ke</small>
+            <b id="bankLine">—</b><br>
+            <span id="bankName" style="color:var(--muted);font-size:12.5px"></span>
+          </div>
+        </div>
+        <p class="incl"><span>✦</span>Free makan siang &amp; coffee break &nbsp; <span>✦</span>E-Sertifikat peserta &nbsp; <span>✦</span>Piagam juara 1, 2, 3</p>
+
+        <div class="field" style="margin-top:18px">
+          <label>Bukti Transfer <i>*</i></label>
+          <label class="file" for="bukti">
+            <input id="bukti" type="file" accept="image/*">
+            <span id="fileLabel">Ketuk untuk <b>unggah foto bukti transfer</b> (JPG/PNG, maks. 2 MB)</span>
+            <img id="preview" alt="Pratinjau bukti transfer">
+          </label>
+          <div class="err" id="fileErr">Unggah bukti transfer (gambar, maks. 2 MB).</div>
+        </div>
+
+        <input class="hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+
+        <label class="agree"><input type="checkbox" id="agree"><span>Saya menyatakan data yang diisi benar dan bersedia mengikuti seluruh ketentuan kegiatan.</span></label>
+        <div class="err" id="agreeErr" style="margin-top:6px">Centang persetujuan terlebih dahulu.</div>
+
+        <button class="submit" id="btn" type="submit">DAFTAR SEKARANG</button>
+        <div class="alert" id="alert"></div>
       </div>
-    </div>
-  </div>
+
+      <div id="success">
+        <div class="check">✓</div>
+        <h2 class="gold-text">Pendaftaran Berhasil</h2>
+        <p style="color:var(--muted)">Barakallahu fiikum, <b id="sName" style="color:var(--text)"></b>.<br>Simpan nomor registrasi Anda:</p>
+        <div class="ticket"><small>No. Registrasi</small><b id="sId"></b></div>
+        <p style="color:var(--muted);font-size:13px">Panitia akan memverifikasi pembayaran dan menghubungi Anda via WhatsApp.</p>
+        <div class="btns">
+          <a class="btn fill" id="waBtn" target="_blank" rel="noopener">Konfirmasi via WhatsApp</a>
+          <a class="btn" href="" id="newBtn">Daftarkan peserta lain</a>
+        </div>
+      </div>
+    </form>
+  </main>
+
+  <footer>
+    Menzil Jalan Menuju RidhaNya
+    <small>© D’raas Menzil Indonesia · Cek e-sertifikat: <a href="certificate.html" style="color:var(--gold)">Halaman Sertifikat</a></small>
+  </footer>
 </div>
 
 <script>
-/* ============ KONFIGURASI ============ */
+/* ============ KONFIGURASI — EDIT BAGIAN INI ============ */
 const CONFIG = {
-  SCRIPT_URL: "GANTI_DENGAN_URL_WEB_APP_APPS_SCRIPT",
-  EVENT_TEXT: "Event Menzil Bersama – Latber dan Edukasi Menzil",
-  EVENT_DATE: "Ahad, 22 November 2026",
-  EVENT_PLACE: "Lanud Suryadarma Kalijati"
+  SCRIPT_URL: "GANTI_DENGAN_URL_WEB_APP_APPS_SCRIPT",   // dari Deploy > Web app
+  ADMIN_WA:   "62XXXXXXXXXXX",                            // nomor panitia, format 62…
+  FEE_LABEL:  "Rp 150.000",
+  BANK:       "[NAMA BANK] · [NO. REKENING]",
+  BANK_NAME:  "a.n. [NAMA PEMILIK REKENING]",
+  MAX_FILE_MB: 2
 };
-/* ===================================== */
+/* ======================================================== */
+
 const $ = id => document.getElementById(id);
-const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+$("fee").textContent = CONFIG.FEE_LABEL;
+$("bankLine").textContent = CONFIG.BANK;
+$("bankName").textContent = CONFIG.BANK_NAME;
 
-async function load(id){
-  if(!id){ $("msg").textContent = "Masukkan nomor registrasi terlebih dahulu."; return; }
-  if(CONFIG.SCRIPT_URL.startsWith("GANTI")){ $("msg").textContent = "Halaman belum dikonfigurasi. Hubungi panitia."; return; }
-  $("msg").textContent = "Mencari sertifikat…";
-  $("stage").style.display = $("actions").style.display = "none";
+let fileData = null;
+
+// Auto-resize untuk iframe Blogger
+function sendHeight(){
+  try{ parent.postMessage({dmHeight: document.documentElement.scrollHeight}, "*"); }catch(e){}
+}
+new ResizeObserver(sendHeight).observe(document.body);
+window.addEventListener("load", sendHeight);
+
+// Upload bukti transfer
+$("bukti").addEventListener("change", e=>{
+  const f = e.target.files[0];
+  fileData = null; $("preview").style.display = "none";
+  if(!f) return;
+  if(!f.type.startsWith("image/") || f.size > CONFIG.MAX_FILE_MB*1024*1024){
+    $("fileErr").style.display = "block"; e.target.value = ""; $("fileLabel").innerHTML = "Ketuk untuk <b>unggah foto bukti transfer</b>"; return;
+  }
+  $("fileErr").style.display = "none";
+  const r = new FileReader();
+  r.onload = () => {
+    fileData = { name: f.name, type: f.type, data: r.result.split(",")[1] };
+    $("preview").src = r.result; $("preview").style.display = "block";
+    $("fileLabel").innerHTML = "<b>" + f.name.replace(/[<>&]/g,"") + "</b> — ketuk untuk mengganti";
+  };
+  r.readAsDataURL(f);
+});
+
+function setBad(el, bad){ el.closest(".field").classList.toggle("bad", bad); return !bad; }
+
+function validate(){
+  let ok = true;
+  ok = setBad($("nama"),  $("nama").value.trim().length < 3) && ok;
+  ok = setBad($("gender"), !$("gender").value) && ok;
+  ok = setBad($("wa"),    !/^(\+?62|0)8[0-9]{7,13}$/.test($("wa").value.replace(/[\s-]/g,""))) && ok;
+  ok = setBad($("email"), !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test($("email").value.trim())) && ok;
+  ok = setBad($("kota"),  $("kota").value.trim().length < 2) && ok;
+  const noFile = !fileData; $("fileErr").style.display = noFile ? "block" : "none"; ok = !noFile && ok;
+  const noAgree = !$("agree").checked; $("agreeErr").style.display = noAgree ? "block" : "none"; ok = !noAgree && ok;
+  return ok;
+}
+
+function normWA(v){
+  v = v.replace(/[^\d+]/g,"").replace(/^\+/,"");
+  if(v.startsWith("0")) v = "62" + v.slice(1);
+  return v;
+}
+
+$("form").addEventListener("submit", async e=>{
+  e.preventDefault();
+  $("alert").className = "alert";
+  if(!validate()){ document.querySelector(".bad, #fileErr[style*='block'], #agreeErr[style*='block']")?.scrollIntoView({behavior:"smooth",block:"center"}); return; }
+  if(CONFIG.SCRIPT_URL.startsWith("GANTI")){ showErr("URL Apps Script belum diisi di CONFIG (lihat README)."); return; }
+
+  const f = new FormData($("form"));
+  const payload = {
+    nama: $("nama").value.trim(), gender: $("gender").value, wa: normWA($("wa").value),
+    email: $("email").value.trim(), kota: $("kota").value.trim(), klub: $("klub").value.trim(),
+    kategori: document.querySelector("input[name=kategori]:checked").value,
+    level: $("level").value, catatan: $("catatan").value.trim(),
+    website: f.get("website") || "", bukti: fileData
+  };
+
+  const btn = $("btn"); btn.disabled = true; btn.textContent = "MENGIRIM…";
   try{
-    const r = await fetch(CONFIG.SCRIPT_URL + "?action=cert&id=" + encodeURIComponent(id));
-    const o = await r.json();
-    if(!o.ok) throw new Error(o.error);
-    const d = o.data;
-    $("cName").textContent = d.nama;
-    $("cDesc").innerHTML = "atas partisipasinya dalam <b>" + esc(CONFIG.EVENT_TEXT) + "</b><br>kategori <b>" + esc(d.kategori) + "</b>, yang diselenggarakan pada " + esc(CONFIG.EVENT_DATE) + " di " + esc(CONFIG.EVENT_PLACE) + ".";
-    if(d.peringkat){ $("cRank").style.display = "block"; $("cRank").textContent = "★ " + d.peringkat + " ★"; } else $("cRank").style.display = "none";
-    $("cId").textContent = "No. " + d.id;
-    $("msg").textContent = "";
-    $("stage").style.display = "block"; $("actions").style.display = "block";
-    fit();
-  }catch(e){ $("msg").textContent = e.message || "Gagal memuat. Coba lagi."; }
-}
-// skala pratinjau agar muat di layar kecil (tidak mempengaruhi cetak)
-function fit(){
-  const c = $("cert"), w = c.offsetWidth, avail = window.innerWidth - 32;
-  c.style.zoom = avail < w ? (avail / w) : 1;
-}
-window.addEventListener("resize", fit);
-window.addEventListener("beforeprint", ()=>{ $("cert").style.zoom = 1; });
-window.addEventListener("afterprint", fit);
-
-$("f").addEventListener("submit", e=>{ e.preventDefault(); load($("rid").value.trim()); });
-const q = new URLSearchParams(location.search).get("id");
-if(q){ $("rid").value = q; load(q); }
+    const res = await fetch(CONFIG.SCRIPT_URL, { method:"POST", headers:{"Content-Type":"text/plain;charset=utf-8"}, body: JSON.stringify(payload) });
+    const out = await res.json();
+    if(!out.ok) throw new Error(out.error || "Gagal menyimpan data.");
+    $("sName").textContent = payload.nama; $("sId").textContent = out.id;
+    const msg = `Assalamu'alaikum Panitia Menzil Bersama. Saya sudah mendaftar.%0ANo. Registrasi: ${out.id}%0ANama: ${encodeURIComponent(payload.nama)}%0AKategori: ${encodeURIComponent(payload.kategori)}`;
+    $("waBtn").href = `https://wa.me/${CONFIG.ADMIN_WA}?text=${msg}`;
+    $("formBody").style.display = "none"; $("success").style.display = "block";
+    window.scrollTo({top:0,behavior:"smooth"}); try{parent.postMessage({dmScrollTop:true},"*")}catch(_){}
+  }catch(err){
+    showErr(err.message || "Terjadi kesalahan jaringan. Coba lagi.");
+    btn.disabled = false; btn.textContent = "DAFTAR SEKARANG";
+  }
+});
+function showErr(m){ const a=$("alert"); a.textContent = m; a.className = "alert err"; }
+$("newBtn").addEventListener("click", e=>{ e.preventDefault(); location.reload(); });
 </script>
 </body>
 </html>
